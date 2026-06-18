@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Elements,
-  PaymentElement,
+  CardNumberElement,
+  CardExpiryElement,
+  CardCvcElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
@@ -16,6 +18,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { course } from "@/lib/course";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
@@ -27,15 +30,18 @@ interface PaymentDialogProps {
 }
 
 function PaymentForm({
+  clientSecret,
   onSuccess,
   onError,
 }: {
+  clientSecret: string;
   onSuccess: () => void;
   onError: (msg: string) => void;
 }) {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -43,12 +49,20 @@ function PaymentForm({
 
     setLoading(true);
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/success`,
+    const cardNumberElement = elements.getElement(CardNumberElement);
+    if (!cardNumberElement) {
+      onError("Card element not found.");
+      setLoading(false);
+      return;
+    }
+
+    const { error } = await stripe.confirmCardPayment(clientSecret!, {
+      payment_method: {
+        card: cardNumberElement,
+        billing_details: {
+          email,
+        },
       },
-      redirect: "if_required",
     });
 
     if (error) {
@@ -59,9 +73,66 @@ function PaymentForm({
     }
   }
 
+  const inputClasses =
+    "rounded-site border border-border bg-white px-3 py-3.5 min-h-[48px] transition-colors focus-within:border-accent focus-within:ring-1 focus-within:ring-accent";
+
+  const elementStyle = {
+    base: {
+      fontSize: "18px",
+      fontFamily: "Inter, sans-serif",
+      color: "#23252A",
+      "::placeholder": { color: "#90969C" },
+    },
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <PaymentElement />
+      <div>
+        <label
+          htmlFor="payment-email"
+          className="mb-1.5 block text-sm font-medium text-foreground"
+        >
+          Email
+        </label>
+        <input
+          id="payment-email"
+          type="email"
+          required
+          placeholder="you@example.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full rounded-site border border-border bg-white px-3 py-3.5 text-[18px] text-foreground placeholder:text-muted/50 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+        />
+      </div>
+
+      <div>
+        <label className="mb-1.5 block text-sm font-medium text-foreground">
+          Card Number
+        </label>
+        <div className={inputClasses}>
+          <CardNumberElement options={{ style: elementStyle }} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">
+            Expiry
+          </label>
+          <div className={inputClasses}>
+            <CardExpiryElement options={{ style: elementStyle }} />
+          </div>
+        </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">
+            CVC
+          </label>
+          <div className={inputClasses}>
+            <CardCvcElement options={{ style: elementStyle }} />
+          </div>
+        </div>
+      </div>
+
       <button
         type="submit"
         disabled={!stripe || loading}
@@ -71,7 +142,7 @@ function PaymentForm({
           "disabled:cursor-not-allowed disabled:opacity-60",
         )}
       >
-        {loading ? "Processing…" : "Pay $27"}
+        {loading ? "Processing…" : `Pay $${course.price}`}
       </button>
     </form>
   );
@@ -84,28 +155,34 @@ export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
   >("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function handleDialogOpen(open: boolean) {
-    if (open && !clientSecret) {
+  // Fetch client secret when dialog opens
+  useEffect(() => {
+    if (open && !clientSecret && status !== "loading") {
       setStatus("loading");
       setErrorMessage("");
-      try {
-        const res = await fetch("/api/create-payment-intent", {
-          method: "POST",
-        });
-        const data = await res.json();
-        if (data.clientSecret) {
-          setClientSecret(data.clientSecret);
-          setStatus("idle");
-        } else {
+      fetch("/api/create-payment-intent", { method: "POST" })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.clientSecret) {
+            setClientSecret(data.clientSecret);
+            setStatus("idle");
+          } else {
+            setStatus("error");
+            setErrorMessage("Couldn't initialize payment. Please try again.");
+          }
+        })
+        .catch(() => {
           setStatus("error");
-          setErrorMessage("Couldn't initialize payment. Please try again.");
-        }
-      } catch {
-        setStatus("error");
-        setErrorMessage("Network error. Please try again.");
-      }
+          setErrorMessage("Network error. Please try again.");
+        });
     }
-    onOpenChange(open);
+  }, [open, clientSecret, status]);
+
+  function handleClose() {
+    setStatus("idle");
+    setClientSecret(null);
+    setErrorMessage("");
+    onOpenChange(false);
   }
 
   function handleSuccess() {
@@ -117,16 +194,17 @@ export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
     setStatus("error");
   }
 
-  function handleClose() {
-    setStatus("idle");
-    setClientSecret(null);
-    setErrorMessage("");
-    onOpenChange(false);
-  }
-
   return (
-    <Dialog open={open} onOpenChange={handleDialogOpen}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        if (!o) handleClose();
+      }}
+    >
+      <DialogContent
+        className="sm:max-w-md"
+        onPointerDownOutside={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>Purchase One Skill</DialogTitle>
           <DialogDescription>
@@ -208,7 +286,11 @@ export function PaymentDialog({ open, onOpenChange }: PaymentDialogProps) {
 
         {status === "idle" && clientSecret && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <PaymentForm onSuccess={handleSuccess} onError={handleError} />
+            <PaymentForm
+              clientSecret={clientSecret}
+              onSuccess={handleSuccess}
+              onError={handleError}
+            />
           </Elements>
         )}
       </DialogContent>

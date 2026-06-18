@@ -36,6 +36,14 @@
         background-color: hsl(var(--accent) / 0.18);
         color: hsl(var(--foreground));
     }
+
+    /* Prevent iOS zoom on Stripe Elements inside the payment dialog */
+    .StripeElement {
+        touch-action: manipulation;
+    }
+    .StripeElement iframe {
+        touch-action: manipulation !important;
+    }
 }
 
 @layer utilities {

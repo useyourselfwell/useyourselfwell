@@ -9,7 +9,7 @@ export function Nav() {
         <a
           href="/"
           className={cn(
-            "font-playfair text-4xl font-medium text-background transition-colors duration-200",
+            "font-playfair text-2xl md:text-4xl font-medium text-background transition-colors duration-200",
             "hover:text-accent",
           )}
         >
@@ -23,7 +23,7 @@ export function Nav() {
             "transition-all duration-200 hover:bg-accent/85 hover:shadow-sm",
           )}
         >
-          Contact Me
+          Contact
         </a>
       </div>
     </header>

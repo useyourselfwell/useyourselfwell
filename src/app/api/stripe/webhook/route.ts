@@ -14,7 +14,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-10-16",
 });
 
-async function addToBrevo(email: string) {
+async function addToBrevo(email: string, listId: number = 2) {
   if (!process.env.BREVO_API_KEY) return;
 
   try {
@@ -26,7 +26,7 @@ async function addToBrevo(email: string) {
       },
       body: JSON.stringify({
         email,
-        listIds: [parseInt(process.env.BREVO_LIST_ID || "2")],
+        listIds: [listId],
         attributes: {
           PRODUCT: course.name,
         },
@@ -129,8 +129,8 @@ async function handlePurchase(email: string, stripeId: string) {
     console.log("Supabase not configured, skipping purchase record.");
   }
 
-  // Add to Brevo
-  await addToBrevo(email);
+  // Add to Brevo (list 3 = course purchasers)
+  await addToBrevo(email, 3);
 
   // Send confirmation email
   await sendConfirmationEmail(email);
