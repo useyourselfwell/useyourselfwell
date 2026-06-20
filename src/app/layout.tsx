@@ -80,6 +80,13 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <Analytics />
+        {/* Metricool tracking pixel */}
+        <img
+          src="https://tracker.metricool.com/c3po.jpg?hash=fe8c9b6003f33b0c241c388d451c4e59"
+          alt=""
+          aria-hidden="true"
+          style={{ position: "absolute", left: "-9999px" }}
+        />
       </body>
     </html>
   );

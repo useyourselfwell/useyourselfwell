@@ -24,28 +24,35 @@ export function Hero() {
         aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover object-center"
       />
-      {/* Dark overlay for legibility */}
-      <div className="absolute inset-0 bg-foreground/55" aria-hidden="true" />
+      {/* Gradient overlay: lighter top-right, darker bottom-left */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.75) 100%)",
+        }}
+        aria-hidden="true"
+      />
 
       <div className="relative mx-auto max-w-4xl px-6 flex flex-col items-center">
-        {/* <div className="flex items-center gap-3">
-          <hr className="w-10 border-t-2 border-accent" />
-          <span className="font-inter text-xs font-medium uppercase tracking-[0.18em] text-accent">
-            Alexander Technique
-          </span>
-          <hr className="w-10 border-t-2 border-accent" />
-        </div> */}
-
-        <h1 className="mt-8 max-w-3xl font-playfair text-4xl font-medium leading-[1.15] text-background md:text-5xl lg:text-6xl">
-          Get out of your own way
+        <h1 className="mb-6 max-w-3xl font-playfair text-4xl font-medium leading-[1.15] text-background md:text-5xl lg:text-6xl">
+          "One Skill" to rule them all{" "}
           {/* Most people don&rsquo;t realize how much tension they carry &mdash;
           until they experience life without it. */}
         </h1>
 
+        <div className="flex items-center gap-3">
+          <hr className="w-10 border-t-2 border-accent" />
+          <span className="font-inter text-s font-medium uppercase tracking-[0.18em] text-accent">
+            The first two steps of the Alexander Technique
+          </span>
+          <hr className="w-10 border-t-2 border-accent" />
+        </div>
+
         <p className="mt-7 max-w-2xl text-lg leading-relaxed text-background/75">
-          Most people are working harder than they need to, in their bodies,
-          their breath, and their minds. This course shows you what that
-          actually feels like, and what's possible when you stop.
+          Most people are working harder than they need to, overthinking,
+          overmoving and overdoing everything. The good news? There is one skill
+          that will show you that it doesn't have to be this way.
         </p>
 
         <div className="mt-10 flex flex-col items-center gap-3">
@@ -56,7 +63,7 @@ export function Hero() {
               "transition-all duration-300 hover:bg-accent/90 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]",
             )}
           >
-            An Introduction to the Alexander Technique · $27
+            Get "One Skill" Now — $27
           </button>
 
           <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-background/60">
