@@ -33,7 +33,12 @@ export function ApplyDialog({
       const res = await fetch("/api/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, goals, offer: "Two Private Lessons ($147)" }),
+        body: JSON.stringify({
+          name,
+          email,
+          goals,
+          offer: "Two Private Lessons ($147)",
+        }),
       });
 
       if (res.ok) {
@@ -65,7 +70,9 @@ export function ApplyDialog({
         <DialogHeader>
           <DialogTitle>Reserve Your Two Lessons</DialogTitle>
           <DialogDescription>
-            Enter your details to request booking. Christopher will reach out within 24 hours to schedule your first lesson and coordinate payment ($147).
+            Enter your details to request booking. Christopher will reach out
+            within 24 hours to schedule your first lesson and coordinate payment
+            ($147).
           </DialogDescription>
         </DialogHeader>
 
@@ -90,7 +97,8 @@ export function ApplyDialog({
               Request Received!
             </p>
             <p className="mt-2 text-sm text-muted">
-              Thanks, {name}. Check your email soon for scheduling times and payment instructions.
+              Thanks, {name}. Check your email soon for scheduling times and
+              payment instructions.
             </p>
           </div>
         ) : (
@@ -160,9 +168,7 @@ export function ApplyDialog({
               />
             </div>
 
-            {error && (
-              <p className="text-sm text-red-600">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-600">{error}</p>}
 
             <button
               type="submit"

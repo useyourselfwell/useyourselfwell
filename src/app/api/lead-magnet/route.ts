@@ -64,14 +64,19 @@ export async function POST(request: Request) {
                   <table width="560" cellpadding="0" cellspacing="0" style="background: #FFFFFF; border: 1px solid #E0DDD4;">
                     <tr>
                       <td style="padding: 40px;">
-                        <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; color: #23252A; margin: 0 0 8px 0; font-weight: 500;">Here's your free guide.</h1>
-                        <p style="font-size: 16px; color: #5E9C9D; line-height: 1.6; margin: 0 0 24px 0;">Thanks for downloading <strong style="color: #23252A;">The 5 Hidden Tension Habits Most People Never Notice</strong>.</p>
-                        <p style="font-size: 14px; color: #5E9C9D; line-height: 1.6; margin: 0;">
-                          <a href="https://useyourselfwell.com/guides/5-hidden-tension-habits.pdf" style="display: inline-block; background: #C47A4A; color: #F6F4EF; padding: 12px 24px; text-decoration: none; font-size: 14px;">Download the Guide</a>
+                        <p style="font-size: 16px; color: #304F50; line-height: 1.6; margin: 0 0 16px 0;">Hey {{ contact.FIRSTNAME }},</p>
+                        <p style="font-size: 16px; color: #304F50; line-height: 1.6; margin: 0 0 16px 0;">Your copy of <strong style="color: #23252A;">The 5 Hidden Tension Habits Most People Never Notice</strong> is ready.</p>
+                        <p style="font-size: 16px; color: #304F50; line-height: 1.6; margin: 0 0 24px 0;">
+                          Inside, you&rsquo;ll learn the small, everyday habits that quietly build up tension in your body, and why most people never connect the dots until it shows up as pain, stiffness, or fatigue.
                         </p>
-                        <p style="font-size: 14px; color: #5E9C9D; line-height: 1.6; margin: 24px 0 0 0;">
-                          Start noticing patterns immediately. If you have questions, feel free to reply.
+                        <p style="margin: 0 0 24px 0;">
+                          <a href="https://useyourselfwell.com/guides/5-hidden-tension-habits.pdf" style="display: inline-block; background: #C47A4A; color: #F6F4EF; padding: 12px 24px; text-decoration: none; font-size: 15px; font-weight: 500;">Get My Guide →</a>
                         </p>
+                        <p style="font-size: 16px; color: #304F50; line-height: 1.6; margin: 0 0 16px 0;">
+                          Once you&rsquo;ve read it, try noticing just one of these habits today. Most people are surprised how often it&rsquo;s happening without them realizing.
+                        </p>
+                        <p style="font-size: 16px; color: #304F50; line-height: 1.6; margin: 0 0 16px 0;">Got questions? Just hit reply. I read every message.</p>
+                        <p style="font-size: 16px; color: #304F50; line-height: 1.6; margin: 0;">Christopher</p>
                       </td>
                     </tr>
                   </table>
