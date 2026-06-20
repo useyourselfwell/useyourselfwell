@@ -35,26 +35,99 @@ export function CourseOffer() {
           {course.description}
         </p>
 
-        <div className="mt-12 space-y-0">
-          {course.modules.map((mod) => (
-            <div
-              key={mod.number}
-              className={cn(
-                "group flex gap-5 border-b border-border py-5 transition-colors duration-200 hover:bg-accent/5 -mx-3 px-3 rounded",
-                mod.number === 1 && "border-t border-border",
-              )}
-            >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/10 text-sm font-semibold text-accent ring-1 ring-accent/20 transition-all duration-200 group-hover:bg-accent group-hover:text-white group-hover:ring-accent">
-                {mod.number}
-              </span>
+        <div className="mt-12">
+          <div className="rounded-site border border-accent/20 bg-accent-light/10 p-8 space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/20 text-accent">
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+              </div>
               <div>
-                <h3 className="text-base font-medium text-foreground">
-                  {mod.title}
-                </h3>
-                <p className="mt-1 text-sm text-muted">{mod.description}</p>
+                <p className="text-sm font-medium text-foreground">
+                  What's included
+                </p>
               </div>
             </div>
-          ))}
+
+            <div className="grid gap-4 sm:grid-cols-3 border-t border-accent/20 pt-6">
+              <div className="space-y-2">
+                <h4 className="font-semibold text-foreground text-sm flex items-center gap-1.5">
+                  <svg
+                    className="h-4 w-4 text-accent shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4.5 12.75l6 6 9-13.5"
+                    />
+                  </svg>
+                  The Deep Stop
+                </h4>
+                <p className="text-xs leading-relaxed text-muted">
+                  A guide to constructive rest — one of the simplest, most
+                  powerful tools for releasing unnecessary tension.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-semibold text-foreground text-sm flex items-center gap-1.5">
+                  <svg
+                    className="h-4 w-4 text-accent shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4.5 12.75l6 6 9-13.5"
+                    />
+                  </svg>
+                  In the Face of the Other
+                </h4>
+                <p className="text-xs leading-relaxed text-muted">
+                  Applying the skill in conversations, meetings, and social
+                  situations — where most people lose awareness fastest.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-semibold text-foreground text-sm flex items-center gap-1.5">
+                  <svg
+                    className="h-4 w-4 text-accent shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4.5 12.75l6 6 9-13.5"
+                    />
+                  </svg>
+                  The Daily Five
+                </h4>
+                <p className="text-xs leading-relaxed text-muted">
+                  A short daily checklist to help the habit of noticing stick.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="mt-14 border-t border-border pt-10 flex flex-col items-center">

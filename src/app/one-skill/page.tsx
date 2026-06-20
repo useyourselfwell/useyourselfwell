@@ -4,7 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ApplyDialog } from "@/components/apply-dialog";
-import { ArrowRight, Compass, Mail, BookOpen, Layers, CheckCircle2 } from "lucide-react";
+import {
+  ArrowRight,
+  Compass,
+  Mail,
+  BookOpen,
+  Layers,
+  CheckCircle2,
+} from "lucide-react";
 
 export default function OneSkillPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -12,12 +19,14 @@ export default function OneSkillPage() {
   const includedItems = [
     {
       title: "Two Private Lessons with Christopher",
-      description: "Hands-on, one-on-one sessions where you experience direct guidance in real time — the part of this work that can't be taught through video alone.",
+      description:
+        "Hands-on, one-on-one sessions where you experience direct guidance in real time — the part of this work that can't be taught through video alone.",
       icon: Compass,
     },
     {
       title: "The 3-Week One Skill Email Course",
-      description: "A short daily series that reinforces what you experience in your lessons, so the awareness doesn't fade once you leave the room.",
+      description:
+        "A short daily series that reinforces what you experience in your lessons, so the awareness doesn't fade once you leave the room.",
       icon: Mail,
     },
   ];
@@ -25,16 +34,19 @@ export default function OneSkillPage() {
   const digitalBonuses = [
     {
       title: "The Deep Stop",
-      description: "A guide to constructive rest — one of the simplest, most powerful tools for releasing unnecessary tension."
+      description:
+        "A guide to constructive rest — one of the simplest, most powerful tools for releasing unnecessary tension.",
     },
     {
       title: "In the Face of the Other",
-      description: "How to apply the skill in conversations, meetings, and other social situations — where most people lose their awareness fastest."
+      description:
+        "How to apply the skill in conversations, meetings, and other social situations — where most people lose their awareness fastest.",
     },
     {
       title: "The Daily Five",
-      description: "A short daily checklist to help the habit of noticing stick, long after your two lessons are over."
-    }
+      description:
+        "A short daily checklist to help the habit of noticing stick, long after your two lessons are over.",
+    },
   ];
 
   return (
@@ -63,20 +75,23 @@ export default function OneSkillPage() {
             One Skill: In Person
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-background/65">
-            Two private lessons with Christopher — and everything you need to make them count.
+            Two private lessons with Christopher — and everything you need to
+            make them count.
           </p>
         </div>
       </section>
 
       <div className="mx-auto max-w-4xl px-6 py-16 sm:py-24 space-y-20">
-        
         {/* ── Introduction ── */}
         <section className="space-y-8 text-center max-w-2xl mx-auto">
           <p className="font-playfair text-xl md:text-2xl leading-relaxed text-foreground font-medium">
-            You&rsquo;ve felt what it&rsquo;s like to push through tension, brace through stress, and try harder than the moment requires.
+            You&rsquo;ve felt what it&rsquo;s like to push through tension,
+            brace through stress, and try harder than the moment requires.
           </p>
           <p className="text-base leading-relaxed text-muted">
-            This is where you start doing something different — with someone in the room who can show you, in real time, what you can&rsquo;t see in yourself.
+            This is where you start doing something different — with someone in
+            the room who can show you, in real time, what you can&rsquo;t see in
+            yourself.
           </p>
           <div className="pt-4">
             <button
@@ -98,7 +113,9 @@ export default function OneSkillPage() {
           </h2>
           <div className="grid gap-6 md:grid-cols-2 text-base leading-relaxed text-muted">
             <p>
-              One lesson gives you a glimpse. Two lessons give you a comparison — a clear, felt sense of before and after, and enough time to start noticing the habit on your own between sessions.
+              One lesson gives you a glimpse. Two lessons give you a comparison
+              — a clear, felt sense of before and after, and enough time to
+              start noticing the habit on your own between sessions.
             </p>
             <p className="font-medium text-foreground md:border-l md:border-border md:pl-6">
               This isn&rsquo;t a sample. It&rsquo;s a real beginning.
@@ -113,13 +130,17 @@ export default function OneSkillPage() {
               What&rsquo;s included
             </h2>
             <p className="mt-2 text-sm text-muted">
-              Everything provided in the package to support your initial transformation:
+              Everything provided in the package to support your initial
+              transformation:
             </p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
             {includedItems.map((item, idx) => (
-              <div key={idx} className="rounded-site border border-border bg-card p-6 shadow-sm space-y-4">
+              <div
+                key={idx}
+                className="rounded-site border border-border bg-card p-6 shadow-sm space-y-4"
+              >
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
                   <item.icon className="h-5 w-5" />
                 </div>
@@ -150,7 +171,8 @@ export default function OneSkillPage() {
                 </div>
               </div>
               <span className="text-sm text-muted max-w-sm">
-                The complete introduction to the work, so you arrive at your first lesson already understanding the core idea.
+                The complete introduction to the work, so you arrive at your
+                first lesson already understanding the core idea.
               </span>
             </div>
 
@@ -176,7 +198,9 @@ export default function OneSkillPage() {
             This is not a trial. It&rsquo;s a beginning.
           </h2>
           <p className="text-base leading-relaxed text-muted">
-            You won&rsquo;t leave with a fix. You&rsquo;ll leave with a felt sense of what&rsquo;s possible — and a clear next step, if you want to keep going.
+            You won&rsquo;t leave with a fix. You&rsquo;ll leave with a felt
+            sense of what&rsquo;s possible — and a clear next step, if you want
+            to keep going.
           </p>
           <div className="pt-2">
             <button
@@ -197,13 +221,32 @@ export default function OneSkillPage() {
             What happens after?
           </h2>
           <p className="text-sm leading-relaxed text-muted">
-            Some people stop here, with two lessons and a set of tools they can use for life.
+            Some people stop here, with two lessons and a set of tools they can
+            use for life.
           </p>
           <p className="text-sm leading-relaxed text-muted">
-            Others realize two lessons is only the beginning — and choose to go deeper with the full Study. That conversation happens after your second lesson, when you have a real, felt sense of what&rsquo;s possible.
+            Others realize two lessons is only the beginning — and choose to go
+            deeper with the full Study. That conversation happens after your
+            second lesson, when you have a real, felt sense of what&rsquo;s
+            possible.
           </p>
         </section>
 
+        {/* ── Testimonial ── */}
+        <section className="text-center space-y-5 max-w-2xl mx-auto">
+          <h2 className="font-playfair text-2xl font-medium text-foreground">
+            What people are saying
+          </h2>
+          <div className="aspect-video w-full overflow-hidden rounded-site shadow-lg">
+            <iframe
+              src="https://www.youtube.com/embed/uwS3RzwbvpE"
+              title="Seth Godin on the Alexander Technique"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="h-full w-full border-0"
+            />
+          </div>
+        </section>
       </div>
 
       {/* ── Ready to Begin Banner ── */}
@@ -217,7 +260,8 @@ export default function OneSkillPage() {
             Ready to begin?
           </h2>
           <p className="text-sm text-background/60 max-w-sm mx-auto">
-            Book your two-lesson private study package today to start coordinate unlearning.
+            Book your two-lesson private study package today to start coordinate
+            unlearning.
           </p>
           <div className="pt-2">
             <button

@@ -111,21 +111,12 @@ export const faqItems = [
 
 export const pricingTiers = [
   {
-    name: "Standard",
-    price: "$2,750",
-    description: "Full 12-week program — 12 weekly one-on-one sessions.",
-    details: "",
-    cta: "Book a Call →",
-    href: "#",
-    highlighted: false,
-  },
-  {
-    name: "Intro Offer — Case Study",
-    price: "$1,280",
+    name: "Two Private Lessons",
+    price: "$147",
     description:
-      "Full 12-week program at a reduced rate. In exchange, you agree to be a case study and provide an honest testimonial at the end of the series.",
+      "A special introductory offer — two one-on-one sessions to experience the Alexander Technique and discover what's possible for you.",
     details: "",
-    cta: "Apply for the Intro Offer →",
+    cta: "Reserve Your Two Lessons →",
     href: "#",
     highlighted: true,
   },

@@ -22,12 +22,12 @@ export function Nav() {
         <Link
           href="/"
           onClick={() => setMenuOpen(false)}
-          className={cn(
-            "font-playfair text-xl sm:text-2xl font-medium text-background transition-colors duration-200",
-            "hover:text-accent",
-          )}
+          className="flex items-center gap-3"
         >
-          Use Yourself Well
+          <img src="/images/logo.png" alt="" className="h-12 sm:h-20 w-auto" />
+          <span className="font-playfair text-2xl sm:text-3xl font-medium text-background mb-1 sm:mb-3">
+            Use Yourself Well
+          </span>
         </Link>
 
         {/* Desktop Navigation Links */}
