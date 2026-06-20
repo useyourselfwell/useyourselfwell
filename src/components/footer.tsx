@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export function Footer() {
@@ -11,24 +12,36 @@ export function Footer() {
         </p>
 
         <nav className="flex gap-6 text-sm text-muted">
-          <a
-            href="#"
+          <Link
+            href="/one-skill"
             className="transition-colors duration-200 hover:text-accent"
           >
-            Privacy Policy
-          </a>
-          <a
-            href="#"
+            One Skill
+          </Link>
+          <Link
+            href="/videos"
             className="transition-colors duration-200 hover:text-accent"
           >
-            Terms
-          </a>
-          <a
+            Videos
+          </Link>
+          <Link
+            href="/workshops"
+            className="transition-colors duration-200 hover:text-accent"
+          >
+            Workshops
+          </Link>
+          <Link
+            href="/about"
+            className="transition-colors duration-200 hover:text-accent"
+          >
+            About
+          </Link>
+          <Link
             href="/contact"
             className="transition-colors duration-200 hover:text-accent"
           >
             Contact
-          </a>
+          </Link>
         </nav>
       </div>
     </footer>
