@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { ApplyDialog } from "@/components/apply-dialog";
+import { ProgramCheckoutDialog } from "@/components/program-checkout-dialog";
+import { program, freeIntro } from "@/lib/course";
 import {
   ArrowRight,
   Compass,
@@ -11,16 +11,17 @@ import {
   BookOpen,
   Layers,
   CheckCircle2,
+  Gift,
 } from "lucide-react";
 
 export default function OneSkillPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const includedItems = [
+  const lessonItems = [
     {
       title: "Two Private Lessons with Christopher",
       description:
-        "Hands-on, one-on-one sessions where you experience direct guidance in real time — the part of this work that can't be taught through video alone.",
+        "Hands-on, one-on-one sessions where you experience direct guidance in real time. This part of this work can't be taught through video alone.",
       icon: Compass,
     },
     {
@@ -31,36 +32,25 @@ export default function OneSkillPage() {
     },
   ];
 
-  const digitalBonuses = [
-    {
-      title: "The Deep Stop",
-      description:
-        "A guide to constructive rest — one of the simplest, most powerful tools for releasing unnecessary tension.",
-    },
-    {
-      title: "In the Face of the Other",
-      description:
-        "How to apply the skill in conversations, meetings, and other social situations — where most people lose their awareness fastest.",
-    },
-    {
-      title: "The Daily Five",
-      description:
-        "A short daily checklist to help the habit of noticing stick, long after your two lessons are over.",
-    },
-  ];
-
   return (
     <>
       {/* ── Page Hero ── */}
-      <section className="relative overflow-hidden bg-foreground py-20 md:py-28">
-        {/* Decorative orb */}
-        <div
+      <section className="relative overflow-hidden py-20 md:py-28">
+        {/* Background image */}
+        <img
+          src="/images/chris-working-2.jpg"
+          alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-accent/10 blur-3xl"
+          className="absolute inset-0 h-full w-full object-cover object-[right_center] md:object-center"
         />
+        {/* Gradient overlay */}
         <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.75) 100%)",
+          }}
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-accent-light/10 blur-3xl"
         />
 
         <div className="relative mx-auto max-w-4xl px-6">
@@ -72,28 +62,28 @@ export default function OneSkillPage() {
           </div>
 
           <h1 className="mt-6 font-playfair text-4xl font-medium leading-[1.15] text-background sm:text-5xl lg:text-6xl">
-            One Skill: In Person
+            One Skill Program
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-background/65">
-            Two private lessons with Christopher — and everything you need to
-            make them count.
-          </p>
-        </div>
-      </section>
 
-      <div className="mx-auto max-w-4xl px-6 py-16 sm:py-24 space-y-20">
-        {/* ── Introduction ── */}
-        <section className="space-y-8 text-center max-w-2xl mx-auto">
-          <p className="font-playfair text-xl md:text-2xl leading-relaxed text-foreground font-medium">
-            You&rsquo;ve felt what it&rsquo;s like to push through tension,
-            brace through stress, and try harder than the moment requires.
+          {/* Pricing */}
+          <div className="mt-4 flex items-baseline gap-3">
+            <span className="text-background/40 line-through text-lg">
+              {program.regularPrice && `$${program.regularPrice}`}
+            </span>
+            <span className="text-3xl font-medium text-accent">
+              ${program.price}
+            </span>
+            <span className="inline-flex items-center rounded-full bg-accent/20 px-3 py-0.5 text-xs font-semibold text-accent ring-1 ring-accent/30">
+              Intro Special - Save ${program.savings}
+            </span>
+          </div>
+
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-background/65">
+            Two private lessons with Christopher, plus everything you need to
+            make them count before, during, and after.
           </p>
-          <p className="text-base leading-relaxed text-muted">
-            This is where you start doing something different — with someone in
-            the room who can show you, in real time, what you can&rsquo;t see in
-            yourself.
-          </p>
-          <div className="pt-4">
+
+          <div className="mt-8">
             <button
               onClick={() => setDialogOpen(true)}
               className={cn(
@@ -101,12 +91,28 @@ export default function OneSkillPage() {
                 "hover:bg-accent/90 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]",
               )}
             >
-              Reserve Your Two Lessons — $147 <ArrowRight className="h-4 w-4" />
+              Schedule Your First Lesson <ArrowRight className="h-4 w-4" />
             </button>
+            <p className="mt-2 text-xs text-background/40">{program.ctaNote}</p>
           </div>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-4xl px-6 py-16 sm:py-24 space-y-20">
+        {/* ── Introduction ── */}
+        <section className="space-y-6 text-center max-w-2xl mx-auto">
+          <p className="font-playfair text-xl md:text-2xl leading-relaxed text-foreground font-medium">
+            You already know how to push through. Brace harder, grit your teeth,
+            force the rep, the set, the moment.
+          </p>
+          <p className="text-base leading-relaxed text-muted">
+            What you don&rsquo;t know (because you can&rsquo;t see it from
+            inside your own body) is what&rsquo;s actually happening underneath
+            all that effort. This is where someone in the room shows you.
+          </p>
         </section>
 
-        {/* ── Why Two Lessons? ── */}
+        {/* ── Why Two Lessons? ──
         <section className="rounded-site border border-border bg-card p-8 md:p-12 shadow-sm space-y-6">
           <h2 className="font-playfair text-2xl font-medium text-foreground">
             Why two lessons?
@@ -121,7 +127,7 @@ export default function OneSkillPage() {
               This isn&rsquo;t a sample. It&rsquo;s a real beginning.
             </p>
           </div>
-        </section>
+        </section> */}
 
         {/* ── What's Included ── */}
         <section className="space-y-8">
@@ -130,13 +136,13 @@ export default function OneSkillPage() {
               What&rsquo;s included
             </h2>
             <p className="mt-2 text-sm text-muted">
-              Everything provided in the package to support your initial
-              transformation:
+              Everything in the program to support your initial transformation:
             </p>
           </div>
 
+          {/* Lesson cards */}
           <div className="grid gap-6 md:grid-cols-2">
-            {includedItems.map((item, idx) => (
+            {lessonItems.map((item, idx) => (
               <div
                 key={idx}
                 className="rounded-site border border-border bg-card p-6 shadow-sm space-y-4"
@@ -154,30 +160,29 @@ export default function OneSkillPage() {
             ))}
           </div>
 
-          {/* Digital Course Included Card */}
+          {/* Free digital course included */}
           <div className="rounded-site border border-accent/20 bg-accent-light/10 p-8 space-y-6">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/20 text-accent">
-                  <BookOpen className="h-5 w-5" />
+                  <Gift className="h-5 w-5" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-foreground text-lg">
-                    One Skill — Digital Course
+                    {freeIntro.name}
                   </h3>
                   <p className="text-xs text-accent font-medium uppercase tracking-wider">
-                    Included free ($27 value)
+                    Included free
                   </p>
                 </div>
               </div>
               <span className="text-sm text-muted max-w-sm">
-                The complete introduction to the work, so you arrive at your
-                first lesson already understanding the core idea.
+                {freeIntro.description}
               </span>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3 border-t border-accent/20 pt-6">
-              {digitalBonuses.map((bonus, idx) => (
+              {freeIntro.bonuses.map((bonus, idx) => (
                 <div key={idx} className="space-y-2">
                   <h4 className="font-semibold text-foreground text-sm flex items-center gap-1.5">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0" />
@@ -199,10 +204,10 @@ export default function OneSkillPage() {
           </h2>
           <p className="text-base leading-relaxed text-muted">
             You won&rsquo;t leave with a fix. You&rsquo;ll leave with a felt
-            sense of what&rsquo;s possible — and a clear next step, if you want
-            to keep going.
+            sense of what&rsquo;s possible and a clear next step, if you want to
+            keep going.
           </p>
-          <div className="pt-2">
+          <div className="pt-2 flex flex-col items-center gap-2">
             <button
               onClick={() => setDialogOpen(true)}
               className={cn(
@@ -210,7 +215,8 @@ export default function OneSkillPage() {
                 "hover:bg-accent/90 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]",
               )}
             >
-              Reserve Your Two Lessons — $147 <ArrowRight className="h-4 w-4" />
+              Schedule Your First Lesson - $197{" "}
+              <ArrowRight className="h-4 w-4" />
             </button>
           </div>
         </section>
@@ -225,8 +231,8 @@ export default function OneSkillPage() {
             use for life.
           </p>
           <p className="text-sm leading-relaxed text-muted">
-            Others realize two lessons is only the beginning — and choose to go
-            deeper with the full Study. That conversation happens after your
+            Others realize two lessons is only the beginning, and choose to go
+            deeper with the full study. That conversation happens after your
             second lesson, when you have a real, felt sense of what&rsquo;s
             possible.
           </p>
@@ -255,15 +261,12 @@ export default function OneSkillPage() {
           aria-hidden="true"
           className="pointer-events-none absolute right-0 top-0 h-48 w-48 rounded-full bg-accent/10 blur-3xl"
         />
-        <div className="relative max-w-2xl mx-auto px-6 space-y-6">
+        <div className="relative max-w-2xl mx-auto px-6 space-y-4">
           <h2 className="font-playfair text-3xl font-medium text-background">
             Ready to begin?
           </h2>
-          <p className="text-sm text-background/60 max-w-sm mx-auto">
-            Book your two-lesson private study package today to start coordinate
-            unlearning.
-          </p>
-          <div className="pt-2">
+
+          <div className="pt-2 flex flex-col items-center gap-2">
             <button
               onClick={() => setDialogOpen(true)}
               className={cn(
@@ -271,13 +274,13 @@ export default function OneSkillPage() {
                 "hover:bg-accent/90",
               )}
             >
-              Reserve Your Two Lessons — $147
+              Schedule Your First Lesson - $197
             </button>
           </div>
         </div>
       </section>
 
-      <ApplyDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+      <ProgramCheckoutDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </>
   );
 }
