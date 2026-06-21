@@ -7,10 +7,12 @@ export function Hero() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setError("");
 
     try {
       const res = await fetch("/api/one-skill-signup", {
@@ -22,9 +24,12 @@ export function Hero() {
       if (res.ok) {
         trackEvent("One Skill Signup");
         setSubmitted(true);
+      } else {
+        const data = await res.json();
+        setError(data.error || "Something went wrong. Please try again.");
       }
     } catch {
-      // silently fail
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -94,34 +99,37 @@ export function Hero() {
               </p>
             </div>
           ) : (
-            <form
-              onSubmit={handleSubmit}
-              className="flex w-full flex-col gap-3 sm:flex-row"
-            >
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className={cn(
-                  "min-w-0 flex-1 border border-white/20 bg-white/10 px-4 py-3.5 text-base text-background",
-                  "placeholder:text-background/45 focus:outline-none focus:ring-1 focus:ring-accent/60",
-                  "rounded-site backdrop-blur-sm",
-                )}
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className={cn(
-                  "rounded-site bg-accent px-7 py-3.5 text-base font-medium text-white shadow-md whitespace-nowrap",
-                  "transition-all duration-300 hover:bg-accent/90 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]",
-                  "disabled:cursor-not-allowed disabled:opacity-60",
-                )}
+            <>
+              <form
+                onSubmit={handleSubmit}
+                className="flex w-full flex-col gap-3 sm:flex-row"
               >
-                {loading ? "Sending…" : "Get Free Access"}
-              </button>
-            </form>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className={cn(
+                    "min-w-0 flex-1 border border-white/20 bg-white/10 px-4 py-3.5 text-base text-background",
+                    "placeholder:text-background/45 focus:outline-none focus:ring-1 focus:ring-accent/60",
+                    "rounded-site backdrop-blur-sm",
+                  )}
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={cn(
+                    "rounded-site bg-accent px-7 py-3.5 text-base font-medium text-white shadow-md whitespace-nowrap",
+                    "transition-all duration-300 hover:bg-accent/90 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]",
+                    "disabled:cursor-not-allowed disabled:opacity-60",
+                  )}
+                >
+                  {loading ? "Sending…" : "Get Free Access"}
+                </button>
+              </form>
+              {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+            </>
           )}
 
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-background/55">
