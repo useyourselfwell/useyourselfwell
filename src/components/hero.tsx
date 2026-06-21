@@ -13,14 +13,14 @@ export function Hero() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/lead-magnet", {
+      const res = await fetch("/api/one-skill-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
       if (res.ok) {
-        trackEvent("Free Intro Signup");
+        trackEvent("One Skill Signup");
         setSubmitted(true);
       }
     } catch {

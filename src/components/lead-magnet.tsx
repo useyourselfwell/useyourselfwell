@@ -13,18 +13,14 @@ export function LeadMagnet() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/lead-magnet", {
+      const res = await fetch("/api/one-skill-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
-      const data = await res.json();
       if (res.ok) {
-        trackEvent("Lead Magnet Signup");
-        if (data.errors?.length) {
-          console.error("Lead magnet errors:", data.errors);
-        }
+        trackEvent("One Skill Signup");
         setSubmitted(true);
       }
     } catch {
@@ -52,20 +48,20 @@ export function LeadMagnet() {
             Free Guide
           </span>
           <h2 className="font-playfair text-3xl font-medium leading-snug text-background md:text-4xl lg:text-5xl">
-            The 5 Hidden Tension Habits
+            The One Skill
             <br />
-            Most People Never Notice
+            That Changes Everything
           </h2>
 
           <p className="mt-6 text-lg leading-relaxed text-background/70">
-            Enter your email and we&rsquo;ll send you a free guide that reveals
-            the most common unconscious tension patterns &mdash; and how to
-            start noticing them today.
+            Enter your email and we&rsquo;ll send you a free guide — two moves,
+            three seconds, no extra time carved out of a day that doesn&rsquo;t
+            have any to spare.
           </p>
 
           {submitted ? (
             <p className="mt-8 text-lg font-medium text-accent">
-              ✓ Check your inbox! The guide is on its way.
+              ✓ Check your inbox! The One Skill guide is on its way.
             </p>
           ) : (
             <form
