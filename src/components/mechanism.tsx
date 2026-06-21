@@ -4,7 +4,7 @@ const mechanisms = [
   {
     title: "Awareness",
     description:
-      "Learn to notice the subtle tension habits you've been carrying for years. Not by changing anything — just by paying attention.",
+      "Learn to notice the subtle tension habits you've been carrying for years. Not by changing anything, just by paying attention.",
   },
   {
     title: "Release",
@@ -14,7 +14,7 @@ const mechanisms = [
   {
     title: "Choice",
     description:
-      "Build the skill of choosing a different response in everyday moments — sitting, standing, walking, breathing, and thinking.",
+      "Build the skill of choosing a different response in everyday moments: sitting, standing, walking, breathing, and thinking.",
   },
 ];
 

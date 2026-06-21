@@ -114,13 +114,28 @@ async function sendConfirmationEmail(email: string) {
   }
 }
 
-async function notifyPurchase(email: string) {
+async function notifyPurchase(
+  email: string,
+  productName: string = course.name,
+  customerName?: string,
+  interest?: string
+) {
   if (!process.env.BREVO_API_KEY) return;
 
   const christopherEmail =
     process.env.CHRISTOPHER_EMAIL || "christopher@useyourselfwell.com";
   const fromEmail = process.env.BREVO_FROM_EMAIL || "hello@useyourselfwell.com";
   const fromName = process.env.BREVO_FROM_NAME || "Use Yourself Well";
+
+  const interestHtml = interest
+    ? `<tr><td style="padding: 6px 0; color: #6B6B65; font-size: 14px;">Hoping to change/improve:</td></tr>
+       <tr><td style="padding: 0 0 12px 0; color: #1C1C1A; font-size: 16px; white-space: pre-wrap;">${interest}</td></tr>`
+    : "";
+
+  const nameHtml = customerName
+    ? `<tr><td style="padding: 6px 0; color: #6B6B65; font-size: 14px;">Customer Name</td></tr>
+       <tr><td style="padding: 0 0 12px 0; color: #1C1C1A; font-size: 16px;">${customerName}</td></tr>`
+    : "";
 
   try {
     await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -132,7 +147,7 @@ async function notifyPurchase(email: string) {
       body: JSON.stringify({
         sender: { email: fromEmail, name: fromName },
         to: [{ email: christopherEmail, name: "Christopher" }],
-        subject: `New Purchase: ${course.name} — ${email}`,
+        subject: `New Purchase: ${productName} — ${customerName || email}`,
         htmlContent: `
           <!DOCTYPE html>
           <html>
@@ -147,9 +162,11 @@ async function notifyPurchase(email: string) {
                         <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; margin: 0 0 16px 0; font-weight: 500;">New Purchase</h1>
                         <table width="100%" cellpadding="0" cellspacing="0">
                           <tr><td style="padding: 6px 0; color: #6B6B65; font-size: 14px;">Product</td></tr>
-                          <tr><td style="padding: 0 0 12px 0; color: #1C1C1A; font-size: 16px;">${course.name}</td></tr>
+                          <tr><td style="padding: 0 0 12px 0; color: #1C1C1A; font-size: 16px;">${productName}</td></tr>
+                          ${nameHtml}
                           <tr><td style="padding: 6px 0; color: #6B6B65; font-size: 14px;">Customer Email</td></tr>
                           <tr><td style="padding: 0 0 12px 0; color: #1C1C1A; font-size: 16px;"><a href="mailto:${email}" style="color: #7C6F5B;">${email}</a></td></tr>
+                          ${interestHtml}
                         </table>
                       </td>
                     </tr>
@@ -167,14 +184,20 @@ async function notifyPurchase(email: string) {
   }
 }
 
-async function handlePurchase(email: string, stripeId: string) {
+async function handlePurchase(
+  email: string,
+  stripeId: string,
+  productName: string = course.name,
+  customerName?: string,
+  interest?: string
+) {
   // Insert purchase into Supabase
   if (isSupabaseConfigured() && supabase) {
     try {
       await (supabase.from("purchases") as any).insert({
         email,
         stripe_session_id: stripeId,
-        product: course.name,
+        product: productName,
       });
     } catch (error) {
       console.error("Supabase insert failed:", error);
@@ -186,11 +209,13 @@ async function handlePurchase(email: string, stripeId: string) {
   // Add to Brevo (list 3 = course purchasers)
   await addToBrevo(email, 3);
 
-  // Send confirmation email
-  await sendConfirmationEmail(email);
+  // Send confirmation email (only for the main digital course)
+  if (productName === course.name) {
+    await sendConfirmationEmail(email);
+  }
 
   // Notify Christopher
-  await notifyPurchase(email);
+  await notifyPurchase(email, productName, customerName, interest);
 }
 
 export async function POST(request: Request) {
@@ -239,7 +264,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No email" }, { status: 400 });
     }
 
-    await handlePurchase(email, pi.id);
+    const productName = pi.metadata?.product || course.name;
+    const customerName = pi.metadata?.customerName;
+    const interest = pi.metadata?.customerInterest;
+
+    await handlePurchase(email, pi.id, productName, customerName, interest);
   }
 
   return NextResponse.json({ received: true });

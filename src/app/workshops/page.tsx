@@ -183,6 +183,15 @@ export default function WorkshopsPage() {
                         {workshop.date}
                       </span>
                     </p>
+                    <div className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent/80 transition-colors">
+                      <span>{isOpen ? "Learn less" : "Learn more"}</span>
+                      <ChevronDown
+                        className={cn(
+                          "h-4 w-4 transition-transform duration-200",
+                          isOpen && "transform rotate-180"
+                        )}
+                      />
+                    </div>
                   </div>
                   <div className="flex items-center gap-4 self-start sm:self-center shrink-0">
                     <button
@@ -194,12 +203,6 @@ export default function WorkshopsPage() {
                     >
                       Register Now - FREE
                     </button>
-                    <ChevronDown
-                      className={cn(
-                        "h-5 w-5 text-muted transition-transform duration-200 shrink-0",
-                        isOpen && "transform rotate-180 text-accent"
-                      )}
-                    />
                   </div>
                 </div>
 

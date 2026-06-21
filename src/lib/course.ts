@@ -1,11 +1,11 @@
 export const course = {
   name: "One Skill",
-  price: 27,
+  price: 0,
   priceId: process.env.STRIPE_PRICE_ID || "",
   description:
-    "Discover the unconscious tension pattern that may be driving your discomfort, fatigue, and stress.",
-  cta: "One Skill -> $27",
-  ctaShort: "Get One Skill →",
+    "The complete introduction to the work, so you understand the core idea and have the tools to start noticing differently right away.",
+  cta: "Get Free Access",
+  ctaShort: "Get Free Access →",
   modules: [
     {
       number: 1,
@@ -23,7 +23,7 @@ export const course = {
       number: 3,
       title: "Discovering tension in standing",
       description:
-        "Notice how you hold yourself up — and what you can let go of.",
+        "Notice how you hold yourself up, and what you can let go of.",
     },
     {
       number: 4,
@@ -44,6 +44,59 @@ export const course = {
         "Practical ways to bring awareness and choice into your daily life.",
     },
   ],
+} as const;
+
+export const freeIntro = {
+  name: "One Skill - Digital Course",
+  price: 0,
+  description:
+    "The complete introduction to the work, so you arrive at your first lesson already understanding the core idea.",
+  bonuses: [
+    {
+      title: "The Daily Five",
+      description:
+        "A short daily checklist to help the habit of noticing stick, long after your lessons are over.",
+    },
+    {
+      title: "The Deep Stop",
+      description:
+        "A guide to constructive rest, one of the simplest, most powerful tools for releasing unnecessary tension.",
+    },
+    {
+      title: "Your Best Face Forward",
+      description:
+        "How to apply the skill in conversations, meetings, and other social situations, which is where most people lose their awareness fastest.",
+    },
+  ],
+  cta: "Get Free Access",
+} as const;
+
+export const program = {
+  name: "One Skill Program",
+  price: 197,
+  regularPrice: 247,
+  savings: 50,
+  description:
+    "Two private lessons with Christopher, the complete digital course, and a 3-week email series to make the awareness stick.",
+  includes: [
+    {
+      title: "Everything in the free intro",
+      description:
+        "The One Skill Digital Course, The Daily Five, The Deep Stop, and Your Best Face Forward, all included.",
+    },
+    {
+      title: "Two Private Lessons with Christopher",
+      description:
+        "Hands-on, one-on-one sessions where you experience direct guidance in real time; this is the part of this work that can't be taught through video alone.",
+    },
+    {
+      title: "The 3-Week One Skill Email Course",
+      description:
+        "A short daily series that reinforces what you experience in your lessons, so the awareness doesn't fade once you leave the room.",
+    },
+  ],
+  cta: "Reserve Your Spot — $197",
+  ctaNote: "Intro special · Regular price $247 · Save $50",
 } as const;
 
 export const siteConfig = {
@@ -111,17 +164,19 @@ export const faqItems = [
 
 export const pricingTiers = [
   {
-    name: "Two Private Lessons",
-    price: "$147",
+    name: "One Skill Program",
+    price: "$197",
+    regularPrice: "$247",
+    savings: "$50",
     description:
-      "A special introductory offer — two one-on-one sessions to experience the Alexander Technique and discover what's possible for you.",
+      "Two private lessons with Christopher, plus the complete digital course and 3-week email series. An introductory offer to experience the work in person.",
     details: "",
-    cta: "Reserve Your Two Lessons →",
+    cta: "Reserve Your Spot — $197 →",
     href: "#",
     highlighted: true,
   },
 ] as const;
 
 export const navigationLinks = [
-  { label: "Get One Skill", href: "#course" },
+  { label: "Get Free Access", href: "#hero" },
 ] as const;

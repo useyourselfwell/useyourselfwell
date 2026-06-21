@@ -1,6 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { cn, trackEvent } from "@/lib/utils";
 import Link from "next/link";
 import { CheckCircle2, Award, BookOpen, Clock } from "lucide-react";
 
@@ -162,41 +163,88 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Call to Action ── */}
-      <section className="relative overflow-hidden bg-foreground py-16 text-center">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute right-0 top-0 h-48 w-48 rounded-full bg-accent/10 blur-3xl"
-        />
-        <div className="relative max-w-2xl mx-auto px-6">
-          <h2 className="font-playfair text-2xl font-medium text-background">
-            Ready to explore the work?
-          </h2>
-          <p className="mt-3 text-sm text-background/60">
-            Start with the self-guided introductory course, or get in touch to ask a question.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              href="/#course"
-              className={cn(
-                "rounded-site bg-accent px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors",
-                "hover:bg-accent/90",
-              )}
-            >
-              Get the Course
-            </Link>
-            <Link
-              href="/contact"
-              className={cn(
-                "rounded-site border border-white/20 bg-white/5 px-6 py-2.5 text-sm font-medium text-background transition-colors",
-                "hover:bg-white/10",
-              )}
-            >
-              Send a Message
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* ── Call to Action: Free Email Signup ── */}
+      <AboutCtaSection />
     </>
+  );
+}
+
+function AboutCtaSection() {
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function handleFreeSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch("/api/lead-magnet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        trackEvent("Free Intro Signup (About Page)");
+        setSubmitted(true);
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <section className="relative overflow-hidden bg-foreground py-16 text-center">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 top-0 h-48 w-48 rounded-full bg-accent/10 blur-3xl"
+      />
+      <div className="relative max-w-2xl mx-auto px-6">
+        <h2 className="font-playfair text-2xl font-medium text-background">
+          Ready to explore the work?
+        </h2>
+        <p className="mt-2 text-sm text-background/60 max-w-sm mx-auto mb-6">
+          Start with the free self-guided digital course to begin noticing tension habits today.
+        </p>
+
+        <div className="max-w-md mx-auto">
+          {submitted ? (
+            <p className="text-base font-medium text-accent">
+              ✓ Check your inbox — free access is on its way.
+            </p>
+          ) : (
+            <form
+              onSubmit={handleFreeSubmit}
+              className="flex flex-col gap-3 sm:flex-row"
+            >
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email for free access"
+                className={cn(
+                  "min-w-0 flex-1 border border-white/20 bg-white/10 px-4 py-3 text-sm text-background",
+                  "placeholder:text-background/40 focus:outline-none focus:ring-1 focus:ring-accent/60",
+                  "rounded-site backdrop-blur-sm",
+                )}
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className={cn(
+                  "rounded-site bg-accent px-6 py-3 text-sm font-medium text-white shadow-sm whitespace-nowrap",
+                  "transition-all duration-300 hover:bg-accent/90 hover:scale-[1.02] active:scale-[0.98]",
+                  "disabled:cursor-not-allowed disabled:opacity-60",
+                )}
+              >
+                {loading ? "Sending…" : "Get Free Access"}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }

@@ -37,12 +37,12 @@ export function ApplyDialog({
           name,
           email,
           goals,
-          offer: "Two Private Lessons ($147)",
+          offer: "One Skill Program ($197 intro special)",
         }),
       });
 
       if (res.ok) {
-        trackEvent("Two Lessons Reservation Requested");
+        trackEvent("Program Reservation Requested");
         setSubmitted(true);
       } else {
         const data = await res.json();
@@ -68,11 +68,11 @@ export function ApplyDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Reserve Your Two Lessons</DialogTitle>
+          <DialogTitle>Reserve Your Spot — One Skill Program</DialogTitle>
           <DialogDescription>
             Enter your details to request booking. Christopher will reach out
-            within 24 hours to schedule your first lesson and coordinate payment
-            ($147).
+            within 24 hours to schedule your lessons and coordinate payment
+            ($197 intro special — regular price $247).
           </DialogDescription>
         </DialogHeader>
 
@@ -97,8 +97,8 @@ export function ApplyDialog({
               Request Received!
             </p>
             <p className="mt-2 text-sm text-muted">
-              Thanks, {name}. Check your email soon for scheduling times and
-              payment instructions.
+              Thanks, {name}. Christopher will be in touch within 24 hours
+              to schedule your lessons and finalize your spot.
             </p>
           </div>
         ) : (
@@ -152,7 +152,7 @@ export function ApplyDialog({
                 htmlFor="apply-goals"
                 className="mb-1.5 block text-sm font-medium text-foreground"
               >
-                What are you hoping to address in these lessons? (optional)
+                What are you hoping to address or improve? (optional)
               </label>
               <textarea
                 id="apply-goals"

@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn, trackEvent } from "@/lib/utils";
 import { Video, Sparkles, ArrowRight, Play } from "lucide-react";
 
 export default function VideosPage() {
@@ -126,32 +127,87 @@ export default function VideosPage() {
           </div>
         </section>
 
-        {/* CTA section */}
-        <section className="rounded-site bg-foreground p-8 md:p-12 text-center relative overflow-hidden">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute right-0 top-0 h-48 w-48 rounded-full bg-accent/10 blur-3xl"
-          />
-          <h2 className="font-playfair text-2xl font-medium text-background relative z-10">
-            Want to dive deeper?
-          </h2>
-          <p className="mt-2 text-sm text-background/60 max-w-sm mx-auto relative z-10">
-            Get instant access to the structured self-guided course and constructive rest guides for $27.
-          </p>
-          <div className="mt-6 relative z-10">
-            <Link
-              href="/#course"
-              className={cn(
-                "inline-flex items-center gap-2 rounded-site bg-accent px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200",
-                "hover:bg-accent/90 hover:shadow-md",
-              )}
-            >
-              Learn about the Course <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </section>
-
+        {/* CTA section: Free Email Access Form */}
+        <VideoCtaSection />
       </div>
     </>
+  );
+}
+
+function VideoCtaSection() {
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function handleFreeSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch("/api/lead-magnet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        trackEvent("Free Intro Signup (Videos Page)");
+        setSubmitted(true);
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <section className="rounded-site bg-foreground p-8 md:p-12 text-center relative overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 top-0 h-48 w-48 rounded-full bg-accent/10 blur-3xl"
+      />
+      <h2 className="font-playfair text-2xl font-medium text-background relative z-10">
+        Just Try It.
+      </h2>
+      <p className="mt-2 text-sm text-background/60 max-w-sm mx-auto relative z-10 mb-6">
+        The digital course is completely free. Get instant access to the structured self-guided course and constructive rest guides.
+      </p>
+
+      <div className="relative z-10 max-w-md mx-auto">
+        {submitted ? (
+          <p className="text-base font-medium text-accent">
+            ✓ Check your inbox — free access is on its way.
+          </p>
+        ) : (
+          <form
+            onSubmit={handleFreeSubmit}
+            className="flex flex-col gap-3 sm:flex-row"
+          >
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email for free access"
+              className={cn(
+                "min-w-0 flex-1 border border-white/20 bg-white/10 px-4 py-3 text-sm text-background",
+                "placeholder:text-background/40 focus:outline-none focus:ring-1 focus:ring-accent/60",
+                "rounded-site backdrop-blur-sm",
+              )}
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className={cn(
+                "rounded-site bg-accent px-6 py-3 text-sm font-medium text-white shadow-sm whitespace-nowrap",
+                "transition-all duration-300 hover:bg-accent/90 hover:scale-[1.02] active:scale-[0.98]",
+                "disabled:cursor-not-allowed disabled:opacity-60",
+              )}
+            >
+              {loading ? "Sending…" : "Get Free Access"}
+            </button>
+          </form>
+        )}
+      </div>
+    </section>
   );
 }
