@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import { siteConfig } from "@/lib/course";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
