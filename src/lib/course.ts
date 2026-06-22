@@ -102,8 +102,15 @@ export const program = {
 export const siteConfig = {
   name: "Use Yourself Well",
   description:
-    "Discover the unconscious habits of tension that may be contributing to chronic discomfort. Learn a different approach through the Alexander Technique.",
+    "Alexander Technique lessons in Bountiful, Utah. Learn to release chronic tension, reduce back pain, and move with greater ease — without surgery, medication, or repeated massage.",
   url: "https://useyourselfwell.com",
+  streetAddress: "294 E 650 N",
+  addressLocality: "Bountiful",
+  addressRegion: "UT",
+  postalCode: "84010",
+  phone: "+18013329504",
+  instructor: "Christopher Neville",
+  geo: { latitude: 40.8968, longitude: -111.8805 },
 } as const;
 
 export const testimonials = [
@@ -180,3 +187,4 @@ export const pricingTiers = [
 export const navigationLinks = [
   { label: "Get Free Access", href: "#hero" },
 ] as const;
+

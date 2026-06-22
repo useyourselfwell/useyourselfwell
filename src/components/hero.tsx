@@ -59,7 +59,7 @@ export function Hero() {
 
       <div className="relative mx-auto max-w-4xl px-6 flex flex-col items-center">
         <h1 className="mb-6 max-w-3xl font-playfair text-4xl font-medium leading-[1.15] text-background md:text-5xl lg:text-6xl">
-          "One Skill" to rule them all
+          One Skill to rule them all
         </h1>
 
         <div className="flex items-center gap-3">
@@ -184,8 +184,13 @@ export function Hero() {
               Instant access
             </span>
           </div>
+
+          <div className="mt-6 text-xs text-background/45 font-medium tracking-wide uppercase">
+            Alexander Technique Lessons & Coaching • Bountiful, Utah
+          </div>
         </div>
       </div>
     </section>
   );
 }
+

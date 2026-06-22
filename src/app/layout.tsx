@@ -22,25 +22,45 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} | ${siteConfig.description}`,
+    default: "Use Yourself Well | Alexander Technique · Bountiful, Utah",
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  keywords: [
+    "Alexander Technique",
+    "Alexander Technique Utah",
+    "Alexander Technique Bountiful Utah",
+    "chronic back pain relief Utah",
+    "tension relief Bountiful UT",
+    "alternative to massage Davis County Utah",
+    "posture improvement Utah",
+    "Christopher Neville Alexander Technique teacher"
+  ],
   icons: {
     icon: "/images/logo-bg.png",
   },
+  alternates: {
+    canonical: "./",
+  },
   openGraph: {
-    title: `One Skill | ${siteConfig.name}`,
+    title: "Use Yourself Well | Alexander Technique · Bountiful, Utah",
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/images/house.png",
+        alt: "Use Yourself Well — Alexander Technique, Bountiful Utah",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `One Skill | ${siteConfig.name}`,
+    title: "Use Yourself Well | Alexander Technique · Bountiful, Utah",
     description: siteConfig.description,
+    images: ["/images/house.png"],
   },
   other: {
     "application/ld+json": JSON.stringify([
@@ -50,6 +70,44 @@ export const metadata: Metadata = {
         name: siteConfig.name,
         url: siteConfig.url,
         description: siteConfig.description,
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": ["HealthAndBeautyBusiness", "LocalBusiness"],
+        "@id": `${siteConfig.url}/#local-business`,
+        name: siteConfig.name,
+        description: siteConfig.description,
+        url: siteConfig.url,
+        telephone: siteConfig.phone,
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: siteConfig.streetAddress,
+          addressLocality: siteConfig.addressLocality,
+          addressRegion: siteConfig.addressRegion,
+          postalCode: siteConfig.postalCode,
+          addressCountry: "US"
+        },
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: siteConfig.geo.latitude,
+          longitude: siteConfig.geo.longitude
+        },
+        image: `${siteConfig.url}/images/house.png`,
+        areaServed: [
+          {
+            "@type": "AdministrativeArea",
+            name: "Bountiful"
+          },
+          {
+            "@type": "AdministrativeArea",
+            name: "Davis County"
+          },
+          {
+            "@type": "AdministrativeArea",
+            name: "Salt Lake City"
+          }
+        ],
+        priceRange: "$$"
       },
       {
         "@context": "https://schema.org",

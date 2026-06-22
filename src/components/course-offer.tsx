@@ -93,8 +93,8 @@ export function CourseOffer() {
         </div>
 
         {/* Location note */}
-        <p className="mt-5 text-xs text-background/35 text-center">
-          Lessons held in Bountiful, Utah — just off the 4th North freeway exit.
+        <p className="mt-5 text-xs text-background/60 text-center tracking-wide font-medium">
+          Lessons held in Bountiful, Utah at <span className="text-accent font-semibold">294 E 650 N</span> — just off the 4th North freeway exit.
         </p>
 
         {/* CTA */}
