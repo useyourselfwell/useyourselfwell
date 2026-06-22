@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { siteConfig } from "@/lib/course";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
@@ -83,6 +84,7 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <Analytics />
+        <SpeedInsights />
         {/* Metricool tracking pixel */}
         <img
           src="https://tracker.metricool.com/c3po.jpg?hash=fe8c9b6003f33b0c241c388d451c4e59"
