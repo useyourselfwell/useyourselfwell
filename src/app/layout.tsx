@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     "tension relief Bountiful UT",
     "alternative to massage Davis County Utah",
     "posture improvement Utah",
-    "Christopher Neville Alexander Technique teacher"
+    "Christopher Neville Alexander Technique teacher",
   ],
   icons: {
     icon: "/images/logo-bg.png",
@@ -85,29 +85,29 @@ export const metadata: Metadata = {
           addressLocality: siteConfig.addressLocality,
           addressRegion: siteConfig.addressRegion,
           postalCode: siteConfig.postalCode,
-          addressCountry: "US"
+          addressCountry: "US",
         },
         geo: {
           "@type": "GeoCoordinates",
           latitude: siteConfig.geo.latitude,
-          longitude: siteConfig.geo.longitude
+          longitude: siteConfig.geo.longitude,
         },
         image: `${siteConfig.url}/images/house.png`,
         areaServed: [
           {
             "@type": "AdministrativeArea",
-            name: "Bountiful"
+            name: "Bountiful",
           },
           {
             "@type": "AdministrativeArea",
-            name: "Davis County"
+            name: "Davis County",
           },
           {
             "@type": "AdministrativeArea",
-            name: "Salt Lake City"
-          }
+            name: "Salt Lake City",
+          },
         ],
-        priceRange: "$$"
+        priceRange: "$$",
       },
       {
         "@context": "https://schema.org",
@@ -143,6 +143,21 @@ export default function RootLayout({
         <Footer />
         <Analytics />
         <SpeedInsights />
+        {/* Google Analytics */}
+        <script
+          src={`https://www.googletagmanager.com/gtag/js?id=G-MEPYY39ZG4`}
+          async
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-MEPYY39ZG4');
+            `,
+          }}
+        />
         {/* Metricool tracking pixel */}
         <img
           src="https://tracker.metricool.com/c3po.jpg?hash=fe8c9b6003f33b0c241c388d451c4e59"
