@@ -371,7 +371,7 @@ export function ProgramCheckoutDialog({
           <DialogTitle>{titles[step]}</DialogTitle>
           {step === "registration" && (
             <DialogDescription>
-              One Skill Program — ${program.price} intro special (reg. ${program.regularPrice})
+              Intro to One Skill — ${program.price} intro special (reg. ${program.regularPrice})
             </DialogDescription>
           )}
           {step === "payment" && (

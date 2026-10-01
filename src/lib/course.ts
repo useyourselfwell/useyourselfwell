@@ -72,7 +72,7 @@ export const freeIntro = {
 } as const;
 
 export const program = {
-  name: "One Skill Program",
+  name: "Intro to One Skill",
   price: 197,
   regularPrice: 247,
   savings: 50,
@@ -200,7 +200,7 @@ export const localKeywords = [
 
 export const pricingTiers = [
   {
-    name: "One Skill Program",
+    name: "Intro to One Skill",
     price: "$197",
     regularPrice: "$247",
     savings: "$50",

@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.blog-article h2 { margin-top: 2.5rem; margin-bottom: 1rem; font-family: var(--font-playfair); font-size: 2rem; line-height: 1.2; }
+.blog-article h3 { margin-top: 2rem; margin-bottom: .75rem; font-family: var(--font-playfair); font-size: 1.5rem; }
+.blog-article p, .blog-article ul, .blog-article blockquote { margin: 1.25rem 0; }
+.blog-article ul { padding-left: 1.25rem; list-style: disc; }
+.blog-article blockquote { border-left: 3px solid hsl(var(--accent)); padding-left: 1rem; font-style: italic; }
+.blog-article a { color: hsl(var(--accent)); text-decoration: underline; }
+
 @layer base {
     :root {
         --background: 43 28% 95%; /* #F6F4EF Warm White */

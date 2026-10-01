@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       currency: "usd",
       automatic_payment_methods: { enabled: true },
       metadata: {
-        product: "One Skill Program",
+        product: "Intro to One Skill",
         customerName: name ?? "",
         customerEmail: email ?? "",
         customerInterest: interest ?? "",

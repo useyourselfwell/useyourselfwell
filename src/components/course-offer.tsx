@@ -36,7 +36,7 @@ export function CourseOffer() {
 
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <h2 className="font-playfair text-3xl font-medium leading-snug text-background md:text-4xl lg:text-5xl">
-            One Skill Program
+            Intro to One Skill
           </h2>
           <div className="flex items-baseline gap-3">
             <span className="text-sm text-background/40 line-through">${program.regularPrice}</span>

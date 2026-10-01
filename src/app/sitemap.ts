@@ -1,7 +1,8 @@
 import { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/course";
+import { getPublishedContentPosts } from "@/lib/content-posts";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes = [
     "",
     "/about",
@@ -15,10 +16,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/desk-workers"
   ];
 
-  return routes.map((route) => ({
+  const staticRoutes: MetadataRoute.Sitemap = routes.map((route) => ({
     url: `${siteConfig.url}${route}`,
     lastModified: new Date(),
-    changeFrequency: route === "" ? "daily" : route === "/contact" || route === "/about" ? "monthly" : "weekly",
+    changeFrequency: (route === "" ? "daily" : route === "/contact" || route === "/about" ? "monthly" : "weekly") as MetadataRoute.Sitemap[0]["changeFrequency"],
     priority: route === "" ? 1.0 : route === "/one-skill" || route === "/bountiful-group" ? 0.9 : route === "/contact" ? 0.6 : 0.8,
   }));
+  const posts = await getPublishedContentPosts();
+  return [...staticRoutes, ...posts.map((post) => ({ url: `${siteConfig.url}/blog/${post.slug}`, lastModified: new Date(post.published_at), changeFrequency: "monthly" as const, priority: 0.7 }))];
 }

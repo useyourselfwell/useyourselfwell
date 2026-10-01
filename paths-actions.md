@@ -18,7 +18,7 @@ This document maps every user-facing path through the site, the actions availabl
 
 ### Purchase Path (Stripe flow)
 
-The One Skill digital course is currently **free** (`course.price: 0`). No Stripe payment is needed for the digital course. The Stripe flow applies only to the **One Skill Program** ($197), which is purchased via Stripe Checkout.
+The One Skill digital course is currently **free** (`course.price: 0`). No Stripe payment is needed for the digital course. The Stripe flow applies only to the **Intro to One Skill** ($197), which is purchased via Stripe Checkout.
 
 ```
 User clicks "Reserve Your Spot — $197"
@@ -45,18 +45,18 @@ User clicks "Reserve Your Spot — $197"
 
 | Section | User Action | Triggered Event | Backend Dependency |
 |---|---|---|---|
-| Hero CTA | Click "Apply for the 9-Week Study" | Opens ApplyDialog | — |
-| ApplyDialog | Submit name + email + goals | `fetch("/api/apply", POST)` | → Brevo: add contact to "9-Week Study Applicants" list → send confirmation email |
-| 9-Week Study section | Click "Apply for the 9-Week Study" | Opens ApplyDialog | (same as above) |
+| Hero CTA | Click "Apply for Intro to One Skill" | Opens ApplyDialog | — |
+| ApplyDialog | Submit name + email + goals | `fetch("/api/apply", POST)` | → Brevo: add contact to "Intro to One Skill Applicants" list → send confirmation email |
+| Intro to One Skill section | Click "Apply for Intro to One Skill" | Opens ApplyDialog | (same as above) |
 | Self-guided course | Click "Get Free Access" | Navigate to `/#course` (scrolls to course section) | Free (no payment required) |
-| Final CTA | Click "Apply for the 9-Week Study" | Opens ApplyDialog | (same as above) |
+| Final CTA | Click "Apply for Intro to One Skill" | Opens ApplyDialog | (same as above) |
 | Final CTA | Click "Not ready yet? Start with One Skill — Free" | Navigate to `/#course` | Free |
 
 **Transactional emails needed:**
 - **Application Confirmation** — triggered by successful `/api/apply` submission → confirm receipt, mention 48-hour response time
 - **Follow-up Notification** — notifies Christopher of new application (Brevo email notification or internal forward)
 
-**Brevo list:** `9-Week Study Applicants` — tag with "applied-9-week"
+**Brevo list:** `Intro to One Skill Applicants` — tag with "applied-intro-to-one-skill"
 
 ---
 
@@ -139,7 +139,7 @@ No backend actions.
 | `/api/create-payment-intent` | POST | Creates Stripe PaymentIntent for One Skill purchase | — (handled by Stripe webhook) |
 | `/api/lead-magnet` | POST | Subscribes email for free guide | → Add to Brevo list "Free Guide" → Send guide email |
 | `/api/contact` | POST | Submits contact form | → Notify Christopher + auto-reply to sender |
-| `/api/apply` | POST | Applies for 9-Week Study | → Add to Brevo list "9-Week Study Applicants" → Send confirmation |
+| /api/apply | POST | Applies for Intro to One Skill | → Add to Brevo list "Intro to One Skill Applicants" → Send confirmation |
 | `/api/workshop-registration` | POST | Registers for a workshop | → Add to Brevo list "Workshop Registrants" → Send confirmation |
 
 ---
@@ -158,7 +158,7 @@ No backend actions.
 | List Name | Source | Tags |
 |---|---|---|
 | Free Guide | Lead Magnet form (`/api/lead-magnet`) | — |
-| 9-Week Study Applicants | Apply dialog (`/api/apply`) | `applied-9-week` |
+| Intro to One Skill Applicants | Apply dialog (/api/apply) | applied-intro-to-one-skill |
 | Workshop Registrants | Workshop registration (`/api/workshop-registration`) | Workshop ID slug: `stop-bracing`, `lightening-load`, `staying-in-game` |
 | Contact Submissions | Contact form (`/api/contact`) | — |
 | One Skill Purchasers | Stripe webhook (`payment_intent.succeeded`) | `purchased-one-skill` |
@@ -172,8 +172,8 @@ No backend actions.
 | Free Guide delivery | Lead magnet form submission | ⬜ |
 | Contact auto-reply | Contact form submission | ⬜ |
 | Contact notification to Christopher | Contact form submission | ⬜ |
-| 9-Week Study application confirmation | Apply form submission | ⬜ |
-| 9-Week Study applicant notification to Christopher | Apply form submission | ⬜ |
+| Intro to One Skill application confirmation | Apply form submission | ⬜ |
+| Intro to One Skill applicant notification to Christopher | Apply form submission | ⬜ |
 | Workshop registration confirmation | Workshop registration form | ⬜ |
 | Course access email (with login/link) | Stripe payment success webhook | ⬜ |
 

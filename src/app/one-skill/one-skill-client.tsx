@@ -62,7 +62,7 @@ export function OneSkillClientPage() {
           </div>
 
           <h1 className="mt-6 font-playfair text-4xl font-medium leading-[1.15] text-background sm:text-5xl lg:text-6xl">
-            One Skill Program
+            Intro to One Skill
           </h1>
 
           {/* Pricing */}

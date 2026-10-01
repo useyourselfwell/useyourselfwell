@@ -31,7 +31,7 @@ export function FinalCta() {
           </h2>
 
           <p className="mt-6 text-lg leading-relaxed text-background/70">
-            Schedule your first lesson in the One Skill Program today. Includes two private sessions with Christopher, the full digital course, and tools you have for life.
+            Schedule your first lesson in Intro to One Skill today. Includes two private sessions with Christopher, the full digital course, and tools you have for life.
           </p>
 
           {/* Primary CTA: $197 program */}
