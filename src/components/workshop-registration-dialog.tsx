@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { cn, trackEvent } from "@/lib/utils";
 import {
   Dialog,
@@ -9,6 +9,10 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/turnstile-widget";
 
 export function WorkshopRegistrationDialog({
   open,
@@ -24,9 +28,12 @@ export function WorkshopRegistrationDialog({
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | undefined>();
+  const widgetRef = useRef<TurnstileWidgetHandle>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!turnstileToken) return;
     setLoading(true);
     setError("");
 
@@ -34,7 +41,7 @@ export function WorkshopRegistrationDialog({
       const res = await fetch("/api/workshop-registration", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, workshop: workshopTitle }),
+        body: JSON.stringify({ name, email, workshop: workshopTitle, turnstileToken }),
       });
 
       if (res.ok) {
@@ -48,6 +55,8 @@ export function WorkshopRegistrationDialog({
       setError("Unable to submit. Please try again later.");
     } finally {
       setLoading(false);
+      // Tokens are single-use: re-challenge before any retry.
+      widgetRef.current?.reset();
     }
   }
 
@@ -139,11 +148,19 @@ export function WorkshopRegistrationDialog({
               />
             </div>
 
+            <div className="flex justify-center">
+              <TurnstileWidget
+                ref={widgetRef}
+                action="workshop"
+                onToken={setTurnstileToken}
+              />
+            </div>
+
             {error && <p className="text-sm text-red-600">{error}</p>}
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !turnstileToken}
               className={cn(
                 "w-full rounded-site bg-accent px-8 py-3 text-base font-medium text-white transition-colors",
                 "hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-60",

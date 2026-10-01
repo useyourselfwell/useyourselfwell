@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { cn, trackEvent } from "@/lib/utils";
 import {
   Dialog,
@@ -9,6 +9,10 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/turnstile-widget";
 
 interface ContactDialogProps {
   open: boolean;
@@ -26,16 +30,19 @@ export function ContactDialog({
   const [phone, setPhone] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | undefined>();
+  const widgetRef = useRef<TurnstileWidgetHandle>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!turnstileToken) return;
     setLoading(true);
 
     try {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone }),
+        body: JSON.stringify({ name, email, phone, turnstileToken }),
       });
 
       if (res.ok) {
@@ -46,6 +53,8 @@ export function ContactDialog({
       // silently fail
     } finally {
       setLoading(false);
+      // Tokens are single-use: re-challenge before any retry.
+      widgetRef.current?.reset();
     }
   }
 
@@ -142,9 +151,16 @@ export function ContactDialog({
                 placeholder="(555) 123-4567"
               />
             </div>
+            <div className="flex justify-center">
+              <TurnstileWidget
+                ref={widgetRef}
+                action="lead"
+                onToken={setTurnstileToken}
+              />
+            </div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !turnstileToken}
               className={cn(
                 "w-full bg-accent px-8 py-3 text-base text-white transition-colors",
                 "hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-60",

@@ -1,17 +1,24 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { cn, trackEvent } from "@/lib/utils";
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/turnstile-widget";
 
 export function Hero() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | undefined>();
+  const widgetRef = useRef<TurnstileWidgetHandle>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!turnstileToken) return;
     setLoading(true);
     setError("");
 
@@ -19,7 +26,7 @@ export function Hero() {
       const res = await fetch("/api/one-skill-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, turnstileToken }),
       });
 
       if (res.ok) {
@@ -33,6 +40,8 @@ export function Hero() {
       setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
+      // Tokens are single-use: re-challenge before any retry.
+      widgetRef.current?.reset();
     }
   }
 
@@ -122,7 +131,7 @@ export function Hero() {
                 />
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !turnstileToken}
                   className={cn(
                     "rounded-site bg-accent px-7 py-3.5 text-base font-medium text-white shadow-md whitespace-nowrap",
                     "transition-all duration-300 hover:bg-accent/90 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]",
@@ -132,6 +141,13 @@ export function Hero() {
                   {loading ? "Sending…" : "Get Free Access"}
                 </button>
               </form>
+              <div className="flex justify-center">
+                <TurnstileWidget
+                  ref={widgetRef}
+                  action="signup"
+                  onToken={setTurnstileToken}
+                />
+              </div>
               {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
             </>
           )}

@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { cn, trackEvent } from "@/lib/utils";
 import { Video, Sparkles, ArrowRight, Play } from "lucide-react";
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/turnstile-widget";
 
 export function VideosClientPage() {
   const upcomingCategories = [
@@ -138,24 +142,34 @@ function VideoCtaSection() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | undefined>();
+  const widgetRef = useRef<TurnstileWidgetHandle>(null);
 
   async function handleFreeSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!turnstileToken) return;
     setLoading(true);
+    setError("");
     try {
       const res = await fetch("/api/lead-magnet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, turnstileToken }),
       });
       if (res.ok) {
         trackEvent("Free Intro Signup (Videos Page)");
         setSubmitted(true);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "Something went wrong. Please try again.");
       }
     } catch {
-      // silently fail
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
+      // Tokens are single-use: re-challenge before any retry.
+      widgetRef.current?.reset();
     }
   }
 
@@ -196,7 +210,7 @@ function VideoCtaSection() {
             />
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !turnstileToken}
               className={cn(
                 "rounded-site bg-accent px-6 py-3 text-sm font-medium text-white shadow-sm whitespace-nowrap",
                 "transition-all duration-300 hover:bg-accent/90 hover:scale-[1.02] active:scale-[0.98]",
@@ -207,6 +221,18 @@ function VideoCtaSection() {
             </button>
           </form>
         )}
+
+        <div className="mt-4 flex justify-center">
+          {!submitted && (
+            <TurnstileWidget
+              ref={widgetRef}
+              action="lead-magnet"
+              onToken={setTurnstileToken}
+            />
+          )}
+        </div>
+
+        {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
       </div>
     </section>
   );

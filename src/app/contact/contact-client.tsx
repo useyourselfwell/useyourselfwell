@@ -1,9 +1,13 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { cn, trackEvent } from "@/lib/utils";
 import Link from "next/link";
 import { Mail, Phone, MapPin, CheckCircle, ArrowRight } from "lucide-react";
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/turnstile-widget";
 
 export function ContactClientPage() {
   const [name, setName] = useState("");
@@ -13,9 +17,12 @@ export function ContactClientPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | undefined>();
+  const widgetRef = useRef<TurnstileWidgetHandle>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!turnstileToken) return;
     setLoading(true);
     setError("");
 
@@ -23,7 +30,7 @@ export function ContactClientPage() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, subject, message }),
+        body: JSON.stringify({ name, email, subject, message, turnstileToken }),
       });
 
       const data = await res.json();
@@ -46,6 +53,8 @@ export function ContactClientPage() {
       setError("Unable to send your message. Please try again later.");
     } finally {
       setLoading(false);
+      // Tokens are single-use: re-challenge before any retry.
+      widgetRef.current?.reset();
     }
   }
 
@@ -142,7 +151,7 @@ export function ContactClientPage() {
             <div className="rounded-site border-l-2 border-accent/40 bg-accent-light/10 p-6 space-y-4">
               <p className="text-sm leading-relaxed text-foreground">
                 <span className="font-semibold text-accent">Prefer to book direct? </span>
-                You can start with a 9-week One Skill study or check out the self-guided course options.
+                You can start with Intro to One Skill or check out the self-guided course options.
               </p>
               <Link
                 href="/one-skill"
@@ -274,13 +283,21 @@ export function ContactClientPage() {
                       placeholder="Tell me a bit about what brings you here..."
                     />
                   </div>
+
+                  <div className="flex justify-center">
+                    <TurnstileWidget
+                      ref={widgetRef}
+                      action="contact"
+                      onToken={setTurnstileToken}
+                    />
+                  </div>
                 </div>
 
                 {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !turnstileToken}
                   className={cn(
                     "mt-8 w-full rounded-site bg-accent px-8 py-3.5 text-sm font-semibold uppercase tracking-wider text-white transition-all duration-200",
                     "hover:bg-accent/90 hover:shadow-md active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60",

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { TURNSTILE_REJECTION, verifyTurnstile } from "@/lib/turnstile";
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const BREVO_WORKSHOP_LIST_ID = parseInt(
@@ -125,13 +126,18 @@ const notificationHtml = (name: string, email: string, workshop: string) => `
 
 export async function POST(request: Request) {
   try {
-    const { name, email, workshop } = await request.json();
+    const { name, email, workshop, turnstileToken } = await request.json();
 
     if (!name || !email || !workshop) {
       return NextResponse.json(
         { error: "Name, email, and workshop are required." },
         { status: 400 },
       );
+    }
+
+    // Verify Turnstile before any downstream work.
+    if (!(await verifyTurnstile(request, turnstileToken, "workshop")).ok) {
+      return NextResponse.json(TURNSTILE_REJECTION, { status: 403 });
     }
 
     const errors: string[] = [];

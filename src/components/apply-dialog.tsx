@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { cn, trackEvent } from "@/lib/utils";
 import {
   Dialog,
@@ -9,6 +9,10 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/turnstile-widget";
 
 export function ApplyDialog({
   open,
@@ -23,9 +27,12 @@ export function ApplyDialog({
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | undefined>();
+  const widgetRef = useRef<TurnstileWidgetHandle>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!turnstileToken) return;
     setLoading(true);
     setError("");
 
@@ -37,7 +44,8 @@ export function ApplyDialog({
           name,
           email,
           goals,
-          offer: "One Skill Program ($197 intro special)",
+          offer: "Intro to One Skill ($197 intro special)",
+          turnstileToken,
         }),
       });
 
@@ -52,6 +60,8 @@ export function ApplyDialog({
       setError("Unable to submit. Please try again later.");
     } finally {
       setLoading(false);
+      // Tokens are single-use: re-challenge before any retry.
+      widgetRef.current?.reset();
     }
   }
 
@@ -68,7 +78,7 @@ export function ApplyDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Reserve Your Spot — One Skill Program</DialogTitle>
+          <DialogTitle>Reserve Your Spot — Intro to One Skill</DialogTitle>
           <DialogDescription>
             Enter your details to request booking. Christopher will reach out
             within 24 hours to schedule your lessons and coordinate payment
@@ -168,11 +178,19 @@ export function ApplyDialog({
               />
             </div>
 
+            <div className="flex justify-center">
+              <TurnstileWidget
+                ref={widgetRef}
+                action="apply"
+                onToken={setTurnstileToken}
+              />
+            </div>
+
             {error && <p className="text-sm text-red-600">{error}</p>}
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !turnstileToken}
               className={cn(
                 "w-full rounded-site bg-accent px-8 py-3 text-base font-medium text-white transition-colors",
                 "hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-60",

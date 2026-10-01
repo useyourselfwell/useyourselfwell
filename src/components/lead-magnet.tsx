@@ -1,22 +1,29 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { cn, trackEvent } from "@/lib/utils";
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/turnstile-widget";
 
 export function LeadMagnet() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | undefined>();
+  const widgetRef = useRef<TurnstileWidgetHandle>(null);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (!turnstileToken) return;
     setLoading(true);
 
     try {
       const res = await fetch("/api/one-skill-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, turnstileToken }),
       });
 
       if (res.ok) {
@@ -27,6 +34,8 @@ export function LeadMagnet() {
       // silently fail
     } finally {
       setLoading(false);
+      // Tokens are single-use: re-challenge before any retry.
+      widgetRef.current?.reset();
     }
   }
 
@@ -80,17 +89,24 @@ export function LeadMagnet() {
                   "rounded-site backdrop-blur-sm",
                 )}
               />
-              <button
-                type="submit"
-                disabled={loading}
-                className={cn(
-                  "rounded-site bg-background px-6 py-3 text-sm font-medium text-foreground shadow-sm",
-                  "transition-all duration-300 hover:bg-background/90 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]",
-                  "disabled:cursor-not-allowed disabled:opacity-60 whitespace-nowrap",
-                )}
-              >
-                {loading ? "Sending..." : "Send me the guide"}
-              </button>
+              <div className="flex flex-col items-center gap-3 sm:flex-row">
+                <TurnstileWidget
+                  ref={widgetRef}
+                  action="signup"
+                  onToken={setTurnstileToken}
+                />
+                <button
+                  type="submit"
+                  disabled={loading || !turnstileToken}
+                  className={cn(
+                    "rounded-site bg-background px-6 py-3 text-sm font-medium text-foreground shadow-sm",
+                    "transition-all duration-300 hover:bg-background/90 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]",
+                    "disabled:cursor-not-allowed disabled:opacity-60 whitespace-nowrap",
+                  )}
+                >
+                  {loading ? "Sending..." : "Send me the guide"}
+                </button>
+              </div>
             </form>
           )}
         </div>

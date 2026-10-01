@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
+import { TURNSTILE_REJECTION, verifyTurnstile } from "@/lib/turnstile";
 
 interface ContactRequestBody {
   name: string;
   email: string;
   subject: string;
   message: string;
+  turnstileToken?: string;
 }
 
 async function upsertBrevoContact(
@@ -13,16 +15,17 @@ async function upsertBrevoContact(
 ): Promise<string | null> {
   if (!process.env.BREVO_API_KEY) return "BREVO_API_KEY is not set";
 
-  // Use PUT with updateEnabled to upsert — works whether contact exists or not
+  // Use POST with updateEnabled to upsert — creates or updates the contact
   const res = await fetch(
-    `https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`,
+    "https://api.brevo.com/v3/contacts",
     {
-      method: "PUT",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         "api-key": process.env.BREVO_API_KEY,
       },
       body: JSON.stringify({
+        email,
         attributes: {
           FIRSTNAME: name,
           CONTACT_SOURCE: "Contact Form",
@@ -153,13 +156,18 @@ function buildInternalEmailHtml(
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as ContactRequestBody;
-    const { name, email, subject, message } = body;
+    const { name, email, subject, message, turnstileToken } = body;
 
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
         { error: "All fields are required." },
         { status: 400 },
       );
+    }
+
+    // Verify Turnstile before any downstream work.
+    if (!(await verifyTurnstile(request, turnstileToken, "contact")).ok) {
+      return NextResponse.json(TURNSTILE_REJECTION, { status: 403 });
     }
 
     // Validate email format

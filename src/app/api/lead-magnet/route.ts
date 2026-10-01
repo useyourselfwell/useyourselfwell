@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
+import { TURNSTILE_REJECTION, verifyTurnstile } from "@/lib/turnstile";
 
 export async function POST(request: Request) {
   try {
-    const { email } = await request.json();
+    const { email, turnstileToken } = await request.json();
 
     if (!email) {
       return NextResponse.json({ error: "Email required" }, { status: 400 });
+    }
+
+    // Verify Turnstile before any downstream work.
+    if (!(await verifyTurnstile(request, turnstileToken, "lead-magnet")).ok) {
+      return NextResponse.json(TURNSTILE_REJECTION, { status: 403 });
     }
 
     const errors: string[] = [];

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { TURNSTILE_REJECTION, verifyTurnstile } from "@/lib/turnstile";
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 const BREVO_LIST_ID = parseInt(process.env.BREVO_APPLY_LIST_ID || "4");
@@ -57,7 +58,7 @@ async function upsertBrevoContact(
         attributes: {
           FIRSTNAME: name,
           APPLY_GOALS: goals,
-          SOURCE: "9-Week Study Application",
+          SOURCE: "Intro to One Skill Application",
         },
         listIds: [BREVO_LIST_ID],
         updateEnabled: true,
@@ -78,7 +79,7 @@ const confirmationEmailHtml = (name: string) => `
           <tr>
             <td style="padding: 40px;">
               <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; margin: 0 0 16px 0; font-weight: 500; color: #23252A;">Thanks for your interest, ${name}.</h1>
-              <p style="color: #304F50; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">I've received your application for the 9-Week One Skill Study and will review it within 48 hours.</p>
+              <p style="color: #304F50; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">I've received your application for Intro to One Skill and will review it within 48 hours.</p>
               <p style="color: #304F50; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">If it feels like a good fit, I'll reach out to schedule a call and discuss next steps.</p>
               <p style="color: #304F50; font-size: 16px; line-height: 1.6; margin: 0;">In the meantime, feel free to explore <a href="https://useyourselfwell.com/one-skill" style="color: #C47A4A;">One Skill</a> to get started.</p>
               <hr style="border: none; border-top: 1px solid #E5E2DC; margin: 32px 0;" />
@@ -103,7 +104,7 @@ const notificationHtml = (name: string, email: string, goals: string) => `
         <table width="560" cellpadding="0" cellspacing="0" style="background: #FFFFFF; border: 1px solid #E5E2DC;">
           <tr>
             <td style="padding: 40px;">
-              <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; margin: 0 0 16px 0; font-weight: 500;">New 9-Week Study Application</h1>
+              <h1 style="font-family: 'Playfair Display', Georgia, serif; font-size: 24px; margin: 0 0 16px 0; font-weight: 500;">New Intro to One Skill Application</h1>
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr><td style="padding: 6px 0; color: #6B6B65; font-size: 14px;">Name</td></tr>
                 <tr><td style="padding: 0 0 12px 0; color: #1C1C1A; font-size: 16px;">${name}</td></tr>
@@ -123,13 +124,18 @@ const notificationHtml = (name: string, email: string, goals: string) => `
 
 export async function POST(request: Request) {
   try {
-    const { name, email, goals } = await request.json();
+    const { name, email, goals, turnstileToken } = await request.json();
 
     if (!name || !email) {
       return NextResponse.json(
         { error: "Name and email are required." },
         { status: 400 },
       );
+    }
+
+    // Verify Turnstile before any downstream work.
+    if (!(await verifyTurnstile(request, turnstileToken, "apply")).ok) {
+      return NextResponse.json(TURNSTILE_REJECTION, { status: 403 });
     }
 
     const errors: string[] = [];
@@ -141,7 +147,7 @@ export async function POST(request: Request) {
     const confirmErr = await sendBrevoEmail(
       email,
       name,
-      "Application Received — 9-Week One Skill Study",
+      "Application Received — Intro to One Skill",
       confirmationEmailHtml(name),
     );
     if (confirmErr) errors.push(confirmErr);
@@ -150,7 +156,7 @@ export async function POST(request: Request) {
     const notifyErr = await sendBrevoEmail(
       CHRISTOPHER_EMAIL,
       "Christopher",
-      `New 9-Week Study Applicant: ${name}`,
+      `New Intro to One Skill Applicant: ${name}`,
       notificationHtml(name, email, goals || ""),
     );
     if (notifyErr) errors.push(notifyErr);
